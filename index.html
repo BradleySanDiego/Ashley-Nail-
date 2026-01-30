@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Ashley's Nails 💅 | Hello Kitty Nail Salon</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,8 +14,6 @@
             --pink-lighter: #FFE5F1;
             --pink-dark: #FF1493;
             --white: #FFFFFF;
-            --cream: #FFF5F7;
-            --bow-red: #FF3366;
             --text-dark: #4A4A4A;
         }
 
@@ -30,11 +27,10 @@
             font-family: 'Fredoka', sans-serif;
             background: linear-gradient(135deg, var(--pink-lighter) 0%, var(--pink-light) 50%, var(--pink-primary) 100%);
             color: var(--text-dark);
-            overflow-x: hidden;
             min-height: 100vh;
         }
 
-        /* Floating Hello Kitty Bows Animation */
+        /* Floating Bows */
         .floating-bows {
             position: fixed;
             top: 0;
@@ -93,7 +89,7 @@
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             list-style: none;
             flex-wrap: wrap;
         }
@@ -112,19 +108,7 @@
             transform: translateY(-2px);
         }
 
-        .nav-links a::after {
-            content: '🎀';
-            position: absolute;
-            right: -15px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            opacity: 1;
-        }
-
-        /* Hero Section */
+        /* Hero */
         .hero {
             position: relative;
             z-index: 5;
@@ -172,6 +156,7 @@
             box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
             text-decoration: none;
             display: inline-block;
+            margin: 0.5rem;
         }
 
         .cta-button:hover {
@@ -180,7 +165,7 @@
             box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
         }
 
-        /* Services Section */
+        /* Services */
         .services {
             position: relative;
             z-index: 5;
@@ -211,17 +196,11 @@
             box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
             transition: all 0.3s ease;
             border: 4px solid var(--pink-light);
-            animation: slideIn 0.5s ease-out;
         }
 
         .service-card:hover {
             transform: translateY(-10px) rotate(1deg);
             box-shadow: 0 12px 40px rgba(255, 105, 180, 0.5);
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         .service-card h3 {
@@ -242,110 +221,6 @@
             color: var(--pink-dark);
         }
 
-        /* Gallery Section */
-        .gallery {
-            position: relative;
-            z-index: 5;
-            padding: 4rem 2rem;
-            background: rgba(255, 255, 255, 0.7);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .gallery-item {
-            height: 250px;
-            background: linear-gradient(135deg, var(--pink-lighter), var(--pink-light));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            transition: all 0.3s ease;
-            border: 3px solid var(--pink-primary);
-            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.05) rotate(-2deg);
-            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.5);
-        }
-
-        /* About Section */
-        .about {
-            position: relative;
-            z-index: 5;
-            padding: 4rem 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .about-content {
-            background: var(--white);
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
-            border: 4px solid var(--pink-light);
-        }
-
-        .about-content h2 {
-            font-family: 'Pacifico', cursive;
-            font-size: 2.5rem;
-            color: var(--pink-primary);
-            margin-bottom: 2rem;
-        }
-
-        .about-content p {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Contact Section */
-        .contact {
-            position: relative;
-            z-index: 5;
-            padding: 4rem 2rem;
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        .contact-content {
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--white);
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
-            border: 4px solid var(--pink-light);
-        }
-
-        .contact-content h2 {
-            font-family: 'Pacifico', cursive;
-            font-size: 2.5rem;
-            color: var(--pink-primary);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .contact-info {
-            font-size: 1.2rem;
-            line-height: 2;
-        }
-
-        .contact-info p {
-            margin-bottom: 1rem;
-        }
-
-        .contact-info strong {
-            color: var(--pink-primary);
-        }
-
         /* Footer */
         footer {
             position: relative;
@@ -354,6 +229,7 @@
             padding: 2rem;
             text-align: center;
             border-top: 4px solid var(--pink-primary);
+            margin-top: 4rem;
         }
 
         footer p {
@@ -365,7 +241,6 @@
         @media (max-width: 768px) {
             .nav-links {
                 gap: 1rem;
-                font-size: 0.9rem;
             }
 
             .hero h1 {
@@ -408,9 +283,8 @@
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#services">Services</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="booking-system.html">Book Now</a></li>
+                <li><a href="admin.html">Admin</a></li>
             </ul>
         </nav>
     </header>
@@ -419,7 +293,8 @@
     <section id="home" class="hero">
         <h1>✨ Welcome to Ashley's Nails! ✨</h1>
         <p>Your Kawaii Hello Kitty Nail Paradise 🌸</p>
-        <a href="#contact" class="cta-button">Book Your Appointment 💖</a>
+        <a href="booking-system.html" class="cta-button">Book Your Appointment 💖</a>
+        <a href="admin.html" class="cta-button">Admin Dashboard 👑</a>
     </section>
 
     <!-- Services Section -->
@@ -455,50 +330,6 @@
                 <h3>🌈 Full Set Acrylics</h3>
                 <p>Build your dream nails from scratch! Custom length, shape, and endless cute possibilities!</p>
                 <div class="service-price">$65</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery" class="gallery">
-        <h2 class="section-title">Nail Inspiration Gallery 🌟</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item">💖</div>
-            <div class="gallery-item">🎀</div>
-            <div class="gallery-item">🌸</div>
-            <div class="gallery-item">✨</div>
-            <div class="gallery-item">🦄</div>
-            <div class="gallery-item">🍓</div>
-            <div class="gallery-item">🌈</div>
-            <div class="gallery-item">💅</div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="about-content">
-            <h2>About Ashley's Nails 🎀</h2>
-            <p>Hi cuties! I'm Ashley, and I'm absolutely obsessed with all things Hello Kitty, kawaii, and making nails look fabulous! 💕</p>
-            <p>I started Ashley's Nails because I believe everyone deserves to feel cute and confident with beautiful nails. Whether you want classic elegance or full-on kawaii explosion, I'm here to make your nail dreams come true!</p>
-            <p>Every service is done with love, care, and a whole lot of pink! Come visit my cozy studio where we can chat, laugh, and create the most adorable nails you've ever seen! ✨</p>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="contact-content">
-            <h2>Let's Get Cute! 💌</h2>
-            <div class="contact-info">
-                <p><strong>📍 Location:</strong> 123 Kawaii Lane, Cute Town, CT 12345</p>
-                <p><strong>📞 Phone:</strong> (555) 123-4567</p>
-                <p><strong>📧 Email:</strong> hello@ashleysnails.com</p>
-                <p><strong>🕐 Hours:</strong></p>
-                <p>Monday - Friday: 9AM - 7PM</p>
-                <p>Saturday: 10AM - 6PM</p>
-                <p>Sunday: Closed (Need my beauty sleep! 😴)</p>
-                <p style="margin-top: 2rem; text-align: center;">
-                    <a href="tel:5551234567" class="cta-button">Call Now! 📞</a>
-                </p>
             </div>
         </div>
     </section>

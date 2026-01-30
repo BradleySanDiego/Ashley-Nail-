@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashley's Nails — Salon Appointments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{--cream:#F9F6F1;--charcoal:#1A1A1A;--blush:#E8D5D0;--rose:#C9A9A6;--gold:#B8956E;--sage:#A8B5A0;--white:#FFFFFF;--error:#D64545}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);min-height:100vh}
+        .container{max-width:1400px;margin:0 auto;padding:0 24px}
+        header{padding:24px 0;position:sticky;top:0;background:var(--cream);z-index:100;border-bottom:1px solid var(--blush)}
+        .header-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+        .logo{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;color:var(--charcoal);text-decoration:none}
+        .logo span{color:var(--gold)}
+        nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .nav-btn{padding:12px 24px;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .3s}
+        .nav-btn.secondary{background:transparent;color:var(--charcoal)}
+        .nav-btn.secondary:hover{background:var(--blush)}
+        .nav-btn.primary{background:var(--charcoal);color:var(--white)}
+        .nav-btn.primary:hover{background:var(--gold)}
+        .user-menu{display:flex;align-items:center;gap:12px}
+        .user-avatar{width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:600;font-size:.9rem}
+        .user-name{font-weight:500}
+        .hero{padding:60px 0 40px;text-align:center}
+        .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:400;line-height:1.1;margin-bottom:16px}
+        .hero h1 em{font-style:italic;color:var(--gold)}
+        .hero p{font-size:1.1rem;color:var(--rose);max-width:500px;margin:0 auto}
+        .main-content{display:grid;grid-template-columns:1fr 380px;gap:40px;padding:40px 0 80px}
+        @media(max-width:1024px){.main-content{grid-template-columns:1fr}}
+        .calendar-section{background:var(--white);border-radius:24px;padding:32px;box-shadow:0 4px 24px rgba(26,26,26,.08)}
+        .calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+        .calendar-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500}
+        .calendar-nav{display:flex;gap:8px}
+        .calendar-nav button{width:44px;height:44px;border:2px solid var(--blush);border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--charcoal)}
+        .calendar-nav button:hover{background:var(--charcoal);border-color:var(--charcoal);color:var(--white)}
+        .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+        .day-header{text-align:center;font-size:.75rem;font-weight:600;color:var(--rose);padding:12px 0;text-transform:uppercase;letter-spacing:.1em}
+        .day-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer;transition:all .3s;position:relative;font-weight:500}
+        .day-cell:not(.empty):not(.past):not(.no-availability):hover{background:var(--blush);transform:scale(1.05)}
+        .day-cell.empty,.day-cell.past,.day-cell.no-availability{cursor:default;color:var(--blush)}
+        .day-cell.today{background:var(--sage);color:var(--white)}
+        .day-cell.selected{background:var(--charcoal);color:var(--white)}
+        .day-cell.available::after{content:'';position:absolute;bottom:6px;width:6px;height:6px;background:var(--gold);border-radius:50%}
+        .day-cell.fully-booked::after{content:'';position:absolute;bottom:6px;width:6px;height:6px;background:var(--rose);border-radius:50%}
+        .calendar-legend{display:flex;gap:24px;margin-top:24px;padding-top:24px;border-top:1px solid var(--blush);justify-content:center;flex-wrap:wrap}
+        .legend-item{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--rose)}
+        .legend-dot{width:8px;height:8px;border-radius:50%}
+        .legend-dot.available{background:var(--gold)}
+        .legend-dot.booked{background:var(--rose)}
+        .sidebar{display:flex;flex-direction:column;gap:24px}
+        .card{background:var(--white);border-radius:24px;padding:28px;box-shadow:0 4px 24px rgba(26,26,26,.08)}
+        .card-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+        .card-title svg{color:var(--gold)}
+        .time-slots{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-height:280px;overflow-y:auto}
+        .time-slot{padding:14px 16px;border:2px solid var(--blush);border-radius:12px;text-align:center;cursor:pointer;transition:all .3s;font-size:.9rem;font-weight:500}
+        .time-slot:hover:not(.booked){border-color:var(--gold);background:rgba(184,149,110,.1)}
+        .time-slot.selected{background:var(--charcoal);border-color:var(--charcoal);color:var(--white)}
+        .time-slot.booked{background:var(--blush);color:var(--rose);cursor:not-allowed;text-decoration:line-through;opacity:.6}
+        .no-slots-message{text-align:center;color:var(--rose);padding:20px;font-style:italic;grid-column:span 2}
+        .service-item{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--blush);cursor:pointer;transition:all .2s}
+        .service-item:last-child{border-bottom:none}
+        .service-item:hover{padding-left:8px}
+        .service-item.selected{background:rgba(184,149,110,.1);margin:0 -28px;padding:16px 28px;border-radius:12px}
+        .service-item.has-deal{border-left:3px solid var(--gold);padding-left:12px;margin-left:-12px}
+        .service-info h4{font-weight:500;margin-bottom:4px}
+        .service-info span{font-size:.85rem;color:var(--rose)}
+        .service-pricing{text-align:right}
+        .service-price{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--gold)}
+        .service-original{font-size:.85rem;color:var(--rose);text-decoration:line-through}
+        .deal-badge{display:inline-block;padding:2px 8px;background:var(--error);color:var(--white);border-radius:100px;font-size:.65rem;font-weight:600;margin-left:8px}
+        .book-btn{width:100%;padding:18px;background:var(--charcoal);color:var(--white);border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s;margin-top:16px}
+        .book-btn:hover:not(:disabled){background:var(--gold);transform:translateY(-2px)}
+        .book-btn:disabled{background:var(--blush);cursor:not-allowed}
+        .my-appointment-item{padding:16px;background:var(--cream);border-radius:12px;margin-bottom:12px;border-left:4px solid var(--gold)}
+        .my-appointment-item .date{font-weight:600;margin-bottom:4px}
+        .my-appointment-item .details{font-size:.9rem;color:var(--rose)}
+        .my-appointment-item .status{display:inline-block;padding:4px 10px;border-radius:100px;font-size:.75rem;font-weight:600;text-transform:uppercase;margin-top:8px}
+        .my-appointment-item .status.confirmed{background:var(--sage);color:var(--white)}
+        .my-appointment-item .status.pending{background:var(--gold);color:var(--white)}
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,26,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;visibility:hidden;transition:all .3s}
+        .modal-overlay.active{opacity:1;visibility:visible}
+        .modal{background:var(--white);border-radius:24px;padding:40px;max-width:480px;width:90%;max-height:90vh;overflow-y:auto}
+        .modal h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;margin-bottom:24px;text-align:center}
+        .modal-input{width:100%;padding:16px 20px;border:2px solid var(--blush);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;margin-bottom:16px}
+        .modal-input:focus{outline:none;border-color:var(--gold)}
+        .modal-input.error{border-color:var(--error)}
+        .error-message{color:var(--error);font-size:.85rem;margin-top:-12px;margin-bottom:16px;display:none}
+        .error-message.show{display:block}
+        .modal-actions{display:flex;gap:12px;margin-top:24px}
+        .modal-btn{flex:1;padding:16px;border-radius:100px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .3s}
+        .modal-btn.cancel{background:transparent;border:2px solid var(--blush);color:var(--charcoal)}
+        .modal-btn.cancel:hover{background:var(--blush)}
+        .modal-btn.confirm{background:var(--charcoal);border:2px solid var(--charcoal);color:var(--white)}
+        .modal-btn.confirm:hover{background:var(--gold);border-color:var(--gold)}
+        .auth-tabs{display:flex;margin-bottom:24px;border-bottom:2px solid var(--blush)}
+        .auth-tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-weight:500;color:var(--rose);border-bottom:2px solid transparent;margin-bottom:-2px}
+        .auth-tab.active{color:var(--charcoal);border-bottom-color:var(--gold)}
+        .auth-form{display:none}
+        .auth-form.active{display:block}
+        .success-message{text-align:center;padding:40px 20px}
+        .success-icon{width:80px;height:80px;background:var(--sage);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+        .success-message h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;margin-bottom:12px}
+        .success-message p{color:var(--rose);margin-bottom:24px}
+        .toast{position:fixed;bottom:32px;right:32px;background:var(--charcoal);color:var(--white);padding:16px 24px;border-radius:12px;display:flex;align-items:center;gap:12px;transform:translateY(100px);opacity:0;transition:all .4s;z-index:1001}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast.success{background:var(--sage)}
+        .toast.error{background:var(--error)}
+        .hidden{display:none!important}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo">Luxe💅</a>
+                <nav>
+                    <div id="guestNav">
+                        <button class="nav-btn secondary" onclick="openAuthModal('login')">Sign In</button>
+                        <button class="nav-btn primary" onclick="openAuthModal('register')">Create Account</button>
+                    </div>
+                    <div id="userNav" class="user-menu hidden">
+                        <div class="user-avatar" id="userAvatar">JD</div>
+                        <span class="user-name" id="userName">John Doe</span>
+                        <button class="nav-btn secondary" onclick="logout()">Sign Out</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Book Your <em>Perfect</em> Appointment</h1>
+            <p>Seamless scheduling for nail techs, hair salons, and beauty professionals</p>
+        </section>
+
+        <div class="main-content">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <h2 class="calendar-title" id="calendarTitle">January 2026</h2>
+                    <div class="calendar-nav">
+                        <button onclick="changeMonth(-1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                        <button onclick="changeMonth(1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+                <div class="calendar-legend">
+                    <div class="legend-item"><div class="legend-dot available"></div><span>Available</span></div>
+                    <div class="legend-item"><div class="legend-dot booked"></div><span>Fully Booked</span></div>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="card">
+                    <h3 class="card-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Available Times</h3>
+                    <div class="time-slots" id="timeSlots"><div class="no-slots-message">Select a date to see times</div></div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Services</h3>
+                    <div id="servicesList"></div>
+                    <button class="book-btn" id="bookBtn" disabled onclick="handleBooking()">Select Date & Time</button>
+                </div>
+
+                <div class="card hidden" id="myAppointmentsCard">
+                    <h3 class="card-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>My Appointments</h3>
+                    <div id="myAppointmentsList"></div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <h2 id="authModalTitle">Welcome Back</h2>
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</div>
+                <div class="auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</div>
+            </div>
+            <div class="auth-form active" id="loginForm">
+                <input type="email" class="modal-input" id="loginEmail" placeholder="Email Address">
+                <div class="error-message" id="loginEmailError">Please enter a valid email</div>
+                <input type="password" class="modal-input" id="loginPassword" placeholder="Password">
+                <div class="error-message" id="loginPasswordError">Password is required</div>
+                <div class="modal-actions">
+                    <button class="modal-btn cancel" onclick="closeAuthModal()">Cancel</button>
+                    <button class="modal-btn confirm" onclick="handleLogin()">Sign In</button>
+                </div>
+            </div>
+            <div class="auth-form" id="registerForm">
+                <input type="text" class="modal-input" id="registerName" placeholder="Full Name">
+                <div class="error-message" id="registerNameError">Name is required</div>
+                <input type="email" class="modal-input" id="registerEmail" placeholder="Email Address">
+                <div class="error-message" id="registerEmailError">Please enter a valid email</div>
+                <input type="tel" class="modal-input" id="registerPhone" placeholder="Phone Number">
+                <div class="error-message" id="registerPhoneError">Phone is required</div>
+                <input type="password" class="modal-input" id="registerPassword" placeholder="Password">
+                <div class="error-message" id="registerPasswordError">Password must be 6+ characters</div>
+                <div class="modal-actions">
+                    <button class="modal-btn cancel" onclick="closeAuthModal()">Cancel</button>
+                    <button class="modal-btn confirm" onclick="handleRegister()">Create Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal">
+            <div id="bookingForm">
+                <h2>Confirm Booking</h2>
+                <div id="bookingSummary" style="background:var(--cream);padding:20px;border-radius:12px;margin-bottom:20px"></div>
+                <textarea class="modal-input" id="bookingNotes" placeholder="Special requests (optional)" style="resize:vertical;min-height:80px"></textarea>
+                <div class="modal-actions">
+                    <button class="modal-btn cancel" onclick="closeBookingModal()">Cancel</button>
+                    <button class="modal-btn confirm" onclick="confirmBooking()">Confirm Booking</button>
+                </div>
+            </div>
+            <div id="bookingSuccess" class="success-message" style="display:none">
+                <div class="success-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+                <h3>Booking Requested!</h3>
+                <p>Your appointment is pending confirmation.</p>
+                <button class="book-btn" onclick="closeBookingModal()" style="max-width:200px;margin:0 auto">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span id="toastMessage">Success!</span></div>
+
+    <script>
+        const DEFAULT_SERVICES=[{id:'manicure',name:'Classic Manicure',duration:45,price:45},{id:'pedicure',name:'Luxury Pedicure',duration:60,price:55},{id:'gelset',name:'Gel Full Set',duration:90,price:75},{id:'haircut',name:'Haircut & Style',duration:60,price:65}];
+
+        function loadData(){
+            const s=localStorage.getItem('luxebook_data');
+            if(s){
+                const d=JSON.parse(s);
+                if(!d.services)d.services=DEFAULT_SERVICES;
+                if(!d.deals)d.deals=[];
+                if(!d.users)d.users=[];
+                if(!d.availability)d.availability=[];
+                if(!d.appointments)d.appointments=[];
+                return d;
+            }
+            return{users:[],availability:[],appointments:[],services:DEFAULT_SERVICES,deals:[]};
+        }
+
+        function saveData(){localStorage.setItem('luxebook_data',JSON.stringify(data))}
+
+        let data=loadData();
+        let currentUser=JSON.parse(localStorage.getItem('luxebook_currentUser'))||null;
+        let currentMonth=new Date().getMonth();
+        let currentYear=new Date().getFullYear();
+        let selectedDate=null,selectedTime=null,selectedService=null;
+
+        document.addEventListener('DOMContentLoaded',()=>{
+            renderCalendar();
+            renderServices();
+            updateAuthUI();
+            if(currentUser)renderMyAppointments();
+        });
+
+        function openAuthModal(tab='login'){document.getElementById('authModal').classList.add('active');switchAuthTab(tab)}
+        function closeAuthModal(){document.getElementById('authModal').classList.remove('active');clearAuthErrors()}
+        function switchAuthTab(tab){
+            document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
+            document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(tab+'Form').classList.add('active');
+            document.getElementById('authModalTitle').textContent=tab==='login'?'Welcome Back':'Create Account';
+            clearAuthErrors();
+        }
+        function clearAuthErrors(){
+            document.querySelectorAll('.modal-input').forEach(i=>i.classList.remove('error'));
+            document.querySelectorAll('.error-message').forEach(e=>e.classList.remove('show'));
+        }
+
+        function handleLogin(){
+            clearAuthErrors();
+            const email=document.getElementById('loginEmail').value.trim();
+            const password=document.getElementById('loginPassword').value;
+            let valid=true;
+            if(!email||!email.includes('@')){document.getElementById('loginEmail').classList.add('error');document.getElementById('loginEmailError').classList.add('show');valid=false}
+            if(!password){document.getElementById('loginPassword').classList.add('error');document.getElementById('loginPasswordError').classList.add('show');valid=false}
+            if(!valid)return;
+            const user=data.users.find(u=>u.email===email&&u.password===password);
+            if(!user){showToast('Invalid email or password','error');return}
+            currentUser=user;
+            localStorage.setItem('luxebook_currentUser',JSON.stringify(user));
+            closeAuthModal();
+            updateAuthUI();
+            renderMyAppointments();
+            showToast('Welcome back, '+user.name.split(' ')[0]+'!','success');
+        }
+
+        function handleRegister(){
+            clearAuthErrors();
+            const name=document.getElementById('registerName').value.trim();
+            const email=document.getElementById('registerEmail').value.trim();
+            const phone=document.getElementById('registerPhone').value.trim();
+            const password=document.getElementById('registerPassword').value;
+            let valid=true;
+            if(!name){document.getElementById('registerName').classList.add('error');document.getElementById('registerNameError').classList.add('show');valid=false}
+            if(!email||!email.includes('@')){document.getElementById('registerEmail').classList.add('error');document.getElementById('registerEmailError').classList.add('show');valid=false}
+            if(!phone){document.getElementById('registerPhone').classList.add('error');document.getElementById('registerPhoneError').classList.add('show');valid=false}
+            if(!password||password.length<6){document.getElementById('registerPassword').classList.add('error');document.getElementById('registerPasswordError').classList.add('show');valid=false}
+            if(!valid)return;
+            if(data.users.find(u=>u.email===email)){showToast('Email already exists','error');return}
+            const newUser={id:Date.now().toString(),name,email,phone,password,createdAt:new Date().toISOString()};
+            data.users.push(newUser);
+            saveData();
+            currentUser=newUser;
+            localStorage.setItem('luxebook_currentUser',JSON.stringify(newUser));
+            closeAuthModal();
+            updateAuthUI();
+            renderMyAppointments();
+            showToast('Account created!','success');
+        }
+
+        function logout(){
+            currentUser=null;
+            localStorage.removeItem('luxebook_currentUser');
+            updateAuthUI();
+            document.getElementById('myAppointmentsCard').classList.add('hidden');
+            showToast('Signed out','success');
+        }
+
+        function updateAuthUI(){
+            const guestNav=document.getElementById('guestNav');
+            const userNav=document.getElementById('userNav');
+            if(currentUser){
+                guestNav.classList.add('hidden');
+                userNav.classList.remove('hidden');
+                document.getElementById('userName').textContent=currentUser.name;
+                document.getElementById('userAvatar').textContent=currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+            }else{
+                guestNav.classList.remove('hidden');
+                userNav.classList.add('hidden');
+            }
+        }
+
+        function renderCalendar(){
+            const grid=document.getElementById('calendarGrid');
+            const title=document.getElementById('calendarTitle');
+            const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+            title.textContent=`${months[currentMonth]} ${currentYear}`;
+            const firstDay=new Date(currentYear,currentMonth,1).getDay();
+            const daysInMonth=new Date(currentYear,currentMonth+1,0).getDate();
+            const today=new Date();
+            let html='';
+            ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{html+=`<div class="day-header">${d}</div>`});
+            for(let i=0;i<firstDay;i++)html+=`<div class="day-cell empty"></div>`;
+            for(let day=1;day<=daysInMonth;day++){
+                const dateStr=`${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                const cellDate=new Date(currentYear,currentMonth,day);
+                const isPast=cellDate<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+                const isToday=cellDate.toDateString()===today.toDateString();
+                const availData=data.availability.find(a=>a.date===dateStr);
+                const hasAvail=availData&&availData.slots&&availData.slots.length>0;
+                const bookedSlots=data.appointments.filter(a=>a.date===dateStr&&a.status!=='cancelled').map(a=>a.time);
+                const availSlots=hasAvail?availData.slots.filter(s=>!bookedSlots.includes(s)):[];
+                const isFullyBooked=hasAvail&&availSlots.length===0;
+                const isSelected=selectedDate===dateStr;
+                let classes='day-cell';
+                if(isPast)classes+=' past';
+                else if(!hasAvail)classes+=' no-availability';
+                else if(isFullyBooked)classes+=' fully-booked';
+                else classes+=' available';
+                if(isToday&&!isPast)classes+=' today';
+                if(isSelected)classes+=' selected';
+                const clickable=!isPast&&hasAvail&&!isFullyBooked;
+                html+=`<div class="${classes}" data-date="${dateStr}" ${clickable?`onclick="selectDate('${dateStr}')"`:''}>${day}</div>`;
+            }
+            grid.innerHTML=html;
+        }
+
+        function changeMonth(delta){
+            currentMonth+=delta;
+            if(currentMonth>11){currentMonth=0;currentYear++}
+            else if(currentMonth<0){currentMonth=11;currentYear--}
+            renderCalendar();
+        }
+
+        function selectDate(dateStr){
+            selectedDate=dateStr;
+            selectedTime=null;
+            document.querySelectorAll('#calendarGrid .day-cell').forEach(c=>{
+                c.classList.remove('selected');
+                if(c.dataset.date===dateStr)c.classList.add('selected');
+            });
+            renderTimeSlots(dateStr);
+            updateBookButton();
+        }
+
+        function renderTimeSlots(dateStr){
+            const container=document.getElementById('timeSlots');
+            const availData=data.availability.find(a=>a.date===dateStr);
+            if(!availData||!availData.slots||!availData.slots.length){
+                container.innerHTML='<div class="no-slots-message">No times available</div>';
+                return;
+            }
+            const bookedSlots=data.appointments.filter(a=>a.date===dateStr&&a.status!=='cancelled').map(a=>a.time);
+            container.innerHTML=availData.slots.map(slot=>{
+                const isBooked=bookedSlots.includes(slot);
+                return`<div class="time-slot ${isBooked?'booked':''}" data-time="${slot}" ${!isBooked?`onclick="selectTime('${slot}')"`:''}>${formatTime(slot)}</div>`;
+            }).join('');
+        }
+
+        function selectTime(time){
+            selectedTime=time;
+            document.querySelectorAll('#timeSlots .time-slot').forEach(s=>{
+                s.classList.remove('selected');
+                if(s.dataset.time===time)s.classList.add('selected');
+            });
+            updateBookButton();
+        }
+
+        function renderServices(){
+            const container=document.getElementById('servicesList');
+            const today=new Date().toISOString().split('T')[0];
+            if(!data.services||!data.services.length){
+                container.innerHTML='<p style="color:var(--rose);text-align:center;padding:20px">No services available</p>';
+                return;
+            }
+            container.innerHTML=data.services.map(s=>{
+                const deal=data.deals.find(d=>d.serviceId===s.id&&(!d.expiry||d.expiry>=today));
+                const finalPrice=deal?calculateDealPrice(s.price,deal):s.price;
+                return`<div class="service-item ${deal?'has-deal':''}" data-service="${s.id}" data-price="${finalPrice}" data-duration="${s.duration}" data-name="${s.name}" onclick="selectService(this)">
+                    <div class="service-info"><h4>${s.name}${deal?`<span class="deal-badge">${deal.name}</span>`:''}</h4><span>${s.duration} min</span></div>
+                    <div class="service-pricing">${deal?`<div class="service-original">$${s.price}</div>`:''}<div class="service-price">$${finalPrice}</div></div>
+                </div>`;
+            }).join('');
+        }
+
+        function calculateDealPrice(orig,deal){
+            switch(deal.type){
+                case'percent':return Math.round(orig*(1-deal.value/100));
+                case'fixed':return Math.max(0,orig-deal.value);
+                case'price':return deal.value;
+                default:return orig;
+            }
+        }
+
+        function selectService(el){
+            document.querySelectorAll('.service-item').forEach(s=>s.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedService={id:el.dataset.service,name:el.dataset.name,price:el.dataset.price,duration:el.dataset.duration};
+            updateBookButton();
+        }
+
+        function updateBookButton(){
+            const btn=document.getElementById('bookBtn');
+            if(selectedDate&&selectedTime&&selectedService){
+                btn.disabled=false;
+                btn.textContent=`Book ${selectedService.name} — $${selectedService.price}`;
+            }else if(selectedDate&&selectedTime){
+                btn.disabled=true;
+                btn.textContent='Select a Service';
+            }else if(selectedDate){
+                btn.disabled=true;
+                btn.textContent='Select a Time';
+            }else{
+                btn.disabled=true;
+                btn.textContent='Select Date & Time';
+            }
+        }
+
+        function handleBooking(){
+            if(!currentUser){openAuthModal('login');showToast('Please sign in to book','error');return}
+            openBookingModal();
+        }
+
+        function openBookingModal(){
+            const modal=document.getElementById('bookingModal');
+            const summary=document.getElementById('bookingSummary');
+            const dateObj=new Date(selectedDate+'T12:00:00');
+            const formattedDate=dateObj.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+            summary.innerHTML=`<div style="margin-bottom:12px"><div style="font-size:.85rem;color:var(--rose);margin-bottom:4px">Service</div><div style="font-weight:600">${selectedService.name}</div><div style="font-size:.9rem;color:var(--rose)">${selectedService.duration} minutes</div></div><div style="margin-bottom:12px"><div style="font-size:.85rem;color:var(--rose);margin-bottom:4px">Date & Time</div><div style="font-weight:600">${formattedDate}</div><div style="font-size:.9rem">${formatTime(selectedTime)}</div></div><div style="border-top:1px solid var(--blush);padding-top:12px;margin-top:12px;display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Total</span><span style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--gold)">$${selectedService.price}</span></div>`;
+            modal.classList.add('active');
+            document.getElementById('bookingForm').style.display='block';
+            document.getElementById('bookingSuccess').style.display='none';
+        }
+
+        function closeBookingModal(){document.getElementById('bookingModal').classList.remove('active');document.getElementById('bookingNotes').value=''}
+
+        function confirmBooking(){
+            const notes=document.getElementById('bookingNotes').value.trim();
+            const appointment={
+                id:Date.now().toString(),
+                oderId:'ORD-'+Date.now(),
+                userId:currentUser.id,
+                userName:currentUser.name,
+                userEmail:currentUser.email,
+                userPhone:currentUser.phone,
+                date:selectedDate,
+                time:selectedTime,
+                service:selectedService.name,
+                serviceId:selectedService.id,
+                price:selectedService.price,
+                duration:selectedService.duration,
+                notes:notes,
+                status:'pending',
+                createdAt:new Date().toISOString()
+            };
+            data.appointments.push(appointment);
+            saveData();
+            document.getElementById('bookingForm').style.display='none';
+            document.getElementById('bookingSuccess').style.display='block';
+            renderCalendar();
+            renderTimeSlots(selectedDate);
+            renderMyAppointments();
+            selectedDate=null;
+            selectedTime=null;
+            selectedService=null;
+            document.querySelectorAll('.service-item').forEach(s=>s.classList.remove('selected'));
+            document.getElementById('timeSlots').innerHTML='<div class="no-slots-message">Select a date to see times</div>';
+            updateBookButton();
+        }
+
+        function renderMyAppointments(){
+            if(!currentUser)return;
+            const card=document.getElementById('myAppointmentsCard');
+            const list=document.getElementById('myAppointmentsList');
+            const myAppts=data.appointments.filter(a=>a.userId===currentUser.id&&a.status!=='cancelled').sort((a,b)=>new Date(a.date)-new Date(b.date));
+            if(!myAppts.length){card.classList.add('hidden');return}
+            card.classList.remove('hidden');
+            list.innerHTML=myAppts.map(apt=>{
+                const dateObj=new Date(apt.date+'T12:00:00');
+                const formattedDate=dateObj.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+                return`<div class="my-appointment-item"><div class="date">${formattedDate} at ${formatTime(apt.time)}</div><div class="details">${apt.service} — $${apt.price}</div><span class="status ${apt.status}">${apt.status}</span></div>`;
+            }).join('');
+        }
+
+        function formatTime(time24){const[h,m]=time24.split(':');const hr=parseInt(h);const ap=hr>=12?'PM':'AM';const h12=hr%12||12;return h12+':'+m+' '+ap}
+        function showToast(msg,type='success'){const t=document.getElementById('toast'),tm=document.getElementById('toastMessage');tm.textContent=msg;t.classList.remove('success','error');t.classList.add('show',type);setTimeout(()=>t.classList.remove('show'),3000)}
+
+        document.getElementById('authModal').addEventListener('click',function(e){if(e.target===this)closeAuthModal()});
+        document.getElementById('bookingModal').addEventListener('click',function(e){if(e.target===this)closeBookingModal()});
+    </script>
+</body>
+</html>

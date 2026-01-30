@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Ashley's Nails</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{--cream:#F9F6F1;--charcoal:#1A1A1A;--blush:#E8D5D0;--rose:#C9A9A6;--gold:#B8956E;--sage:#A8B5A0;--white:#FFFFFF;--error:#D64545}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:var(--charcoal);color:var(--cream);min-height:100vh}
+        .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--charcoal),#2a2a2a)}
+        .login-box{background:var(--white);padding:48px;border-radius:24px;width:100%;max-width:420px;color:var(--charcoal);box-shadow:0 24px 64px rgba(0,0,0,.3)}
+        .login-box h1{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;margin-bottom:8px;text-align:center}
+        .login-box p{color:var(--rose);text-align:center;margin-bottom:32px}
+        .login-input{width:100%;padding:16px 20px;border:2px solid var(--blush);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;margin-bottom:16px}
+        .login-input:focus{outline:none;border-color:var(--gold)}
+        .login-btn{width:100%;padding:18px;background:var(--charcoal);color:var(--white);border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer}
+        .login-btn:hover{background:var(--gold)}
+        .login-error{color:var(--error);text-align:center;margin-bottom:16px;display:none}
+        .login-error.show{display:block}
+        .dashboard{display:none}
+        .dashboard.active{display:block}
+        .admin-header{background:var(--charcoal);border-bottom:1px solid rgba(255,255,255,.1);padding:20px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+        .admin-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;color:var(--white);text-decoration:none}
+        .admin-logo span{color:var(--gold)}
+        .admin-badge{background:var(--gold);color:var(--charcoal);padding:4px 12px;border-radius:100px;font-size:.75rem;font-weight:600;margin-left:12px}
+        .header-actions{display:flex;gap:12px;align-items:center}
+        .header-btn{padding:10px 20px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;text-decoration:none;border:none}
+        .header-btn.secondary{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--cream)}
+        .header-btn.secondary:hover{background:rgba(255,255,255,.1)}
+        .header-btn.danger{background:var(--error);color:var(--white)}
+        .admin-main{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 73px)}
+        @media(max-width:1024px){.admin-main{grid-template-columns:1fr}.admin-sidebar{display:none}}
+        .admin-sidebar{background:#1f1f1f;padding:24px;border-right:1px solid rgba(255,255,255,.05)}
+        .sidebar-section{margin-bottom:32px}
+        .sidebar-title{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--rose);margin-bottom:12px}
+        .sidebar-nav{display:flex;flex-direction:column;gap:4px}
+        .sidebar-link{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;color:var(--cream);cursor:pointer}
+        .sidebar-link:hover{background:rgba(255,255,255,.05)}
+        .sidebar-link.active{background:var(--gold);color:var(--charcoal)}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:32px}
+        @media(max-width:1200px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:600px){.stats-grid{grid-template-columns:1fr}}
+        .stat-card{background:#1f1f1f;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,.05)}
+        .stat-label{font-size:.85rem;color:var(--rose);margin-bottom:8px}
+        .stat-value{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;color:var(--white)}
+        .stat-value.gold{color:var(--gold)}
+        .stat-value.sage{color:var(--sage)}
+        .stat-value.rose{color:var(--rose)}
+        .admin-content{padding:32px;background:var(--charcoal);overflow-y:auto}
+        .content-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px}
+        .content-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500}
+        .tabs{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:16px;flex-wrap:wrap}
+        .tab{padding:10px 20px;background:transparent;border:none;color:var(--rose);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;border-radius:100px}
+        .tab:hover{color:var(--white);background:rgba(255,255,255,.05)}
+        .tab.active{background:var(--gold);color:var(--charcoal)}
+        .table-container{background:#1f1f1f;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.05)}
+        .data-table{width:100%;border-collapse:collapse}
+        .data-table th{text-align:left;padding:16px 20px;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--rose);background:rgba(0,0,0,.2)}
+        .data-table td{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+        .data-table tr:last-child td{border-bottom:none}
+        .client-info{display:flex;align-items:center;gap:12px}
+        .client-avatar{width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--charcoal);font-weight:600;font-size:.85rem}
+        .client-name{font-weight:500}
+        .client-email{font-size:.85rem;color:var(--rose)}
+        .status-badge{display:inline-block;padding:6px 14px;border-radius:100px;font-size:.75rem;font-weight:600;text-transform:uppercase}
+        .status-badge.pending{background:rgba(184,149,110,.2);color:var(--gold)}
+        .status-badge.confirmed{background:rgba(168,181,160,.2);color:var(--sage)}
+        .status-badge.cancelled{background:rgba(214,69,69,.2);color:var(--error)}
+        .action-btns{display:flex;gap:8px;flex-wrap:wrap}
+        .action-btn{padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;border:none}
+        .action-btn.confirm{background:var(--sage);color:var(--white)}
+        .action-btn.confirm:hover{background:#8fa087}
+        .action-btn.cancel{background:rgba(214,69,69,.2);color:var(--error)}
+        .action-btn.cancel:hover{background:var(--error);color:var(--white)}
+        .action-btn.edit{background:rgba(184,149,110,.2);color:var(--gold)}
+        .action-btn.edit:hover{background:var(--gold);color:var(--charcoal)}
+        .admin-section{display:none}
+        .admin-section.active{display:block}
+        .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+        .card{background:#1f1f1f;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,.05)}
+        .card h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+        .card h3 svg{color:var(--gold)}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;margin-bottom:8px;font-size:.9rem;color:var(--cream)}
+        .form-control{width:100%;padding:14px 16px;border:1px solid rgba(255,255,255,.1);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.95rem;background:var(--charcoal);color:var(--cream)}
+        .form-control:focus{outline:none;border-color:var(--gold)}
+        .form-row{display:flex;gap:12px}
+        .form-row .form-control{flex:1}
+        .btn{padding:14px 24px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:none}
+        .btn-primary{background:var(--gold);color:var(--charcoal);width:100%}
+        .btn-primary:hover{background:#a8845f}
+        .btn-secondary{background:rgba(255,255,255,.1);color:var(--cream)}
+        .btn-sm{padding:8px 16px;font-size:.85rem}
+        .service-item{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--charcoal);border-radius:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
+        .service-item.has-deal{border-color:var(--gold);background:rgba(184,149,110,.1)}
+        .service-details h4{font-weight:500;margin-bottom:4px}
+        .service-details span{font-size:.85rem;color:var(--rose)}
+        .service-price{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--gold)}
+        .service-original-price{font-size:.85rem;color:var(--rose);text-decoration:line-through}
+        .deal-badge{display:inline-block;padding:4px 10px;background:var(--error);color:var(--white);border-radius:100px;font-size:.7rem;font-weight:600;margin-top:4px}
+        .availability-list{max-height:500px;overflow-y:auto}
+        .availability-item{padding:16px;background:var(--charcoal);border-radius:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
+        .availability-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .availability-date{font-weight:600;font-size:1.1rem}
+        .availability-slots-grid{display:flex;flex-wrap:wrap;gap:8px}
+        .slot-chip{padding:6px 12px;background:rgba(168,181,160,.2);color:var(--sage);border-radius:100px;font-size:.8rem;display:flex;align-items:center;gap:6px}
+        .slot-chip.booked{background:rgba(214,69,69,.2);color:var(--error)}
+        .slot-chip .remove-slot{cursor:pointer;opacity:.7}
+        .slot-chip .remove-slot:hover{opacity:1}
+        .delete-btn{width:32px;height:32px;border:none;background:rgba(214,69,69,.2);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--error)}
+        .delete-btn:hover{background:var(--error);color:var(--white)}
+        .empty-state{text-align:center;padding:60px 20px;color:var(--rose)}
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;visibility:hidden}
+        .modal-overlay.active{opacity:1;visibility:visible}
+        .modal{background:#1f1f1f;border-radius:24px;padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto}
+        .modal h2{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:24px}
+        .modal-actions{display:flex;gap:12px;margin-top:24px}
+        .modal-actions .btn{flex:1}
+        .toast{position:fixed;bottom:32px;right:32px;background:var(--sage);color:var(--white);padding:16px 24px;border-radius:12px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);transform:translateY(100px);opacity:0;transition:all .4s;z-index:1001}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast.error{background:var(--error)}
+        .quick-add{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+        .quick-add-btn{padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--cream);font-size:.8rem;cursor:pointer}
+        .quick-add-btn:hover{background:var(--gold);color:var(--charcoal);border-color:var(--gold)}
+    </style>
+</head>
+<body>
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h1>Admin Dashboard</h1>
+            <p>Enter your password to access</p>
+            <div class="login-error" id="loginError">Incorrect password</div>
+            <input type="password" class="login-input" id="adminPassword" placeholder="Admin Password" onkeypress="if(event.key==='Enter')attemptLogin()">
+            <button class="login-btn" onclick="attemptLogin()">Access Dashboard</button>
+            <p style="margin-top:20px;font-size:.85rem;color:var(--rose)">Default: <strong>admin123</strong></p>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <header class="admin-header">
+            <div style="display:flex;align-items:center">
+                <a href="index.html" class="admin-logo">Luxe💅</a>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            <div class="header-actions">
+                <a href="index.html" class="header-btn secondary">View Site</a>
+                <button class="header-btn danger" onclick="adminLogout()">Logout</button>
+            </div>
+        </header>
+
+        <div class="admin-main">
+            <aside class="admin-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Menu</div>
+                    <nav class="sidebar-nav">
+                        <div class="sidebar-link active" data-section="appointments" onclick="showSection('appointments')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            Appointments
+                        </div>
+                        <div class="sidebar-link" data-section="availability" onclick="showSection('availability')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            Availability
+                        </div>
+                        <div class="sidebar-link" data-section="services" onclick="showSection('services')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            Services & Pricing
+                        </div>
+                        <div class="sidebar-link" data-section="deals" onclick="showSection('deals')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            Deals & Promos
+                        </div>
+                        <div class="sidebar-link" data-section="clients" onclick="showSection('clients')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            Clients
+                        </div>
+                    </nav>
+                </div>
+            </aside>
+
+            <main class="admin-content">
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value gold" id="pendingCount">0</div></div>
+                    <div class="stat-card"><div class="stat-label">This Week</div><div class="stat-value sage" id="confirmedWeek">0</div></div>
+                    <div class="stat-card"><div class="stat-label">Active Deals</div><div class="stat-value rose" id="activeDeals">0</div></div>
+                    <div class="stat-card"><div class="stat-label">Clients</div><div class="stat-value" id="clientCount">0</div></div>
+                </div>
+
+                <div class="admin-section active" id="appointmentsSection">
+                    <div class="content-header"><h2 class="content-title">Appointments</h2></div>
+                    <div class="tabs">
+                        <button class="tab active" data-filter="pending" onclick="filterAppointments('pending')">Pending</button>
+                        <button class="tab" data-filter="confirmed" onclick="filterAppointments('confirmed')">Confirmed</button>
+                        <button class="tab" data-filter="all" onclick="filterAppointments('all')">All</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead><tr><th>Client</th><th>Service</th><th>Date & Time</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="appointmentsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-section" id="availabilitySection">
+                    <div class="content-header"><h2 class="content-title">Manage Availability</h2></div>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Day</h3>
+                            <div class="form-group"><label>Date</label><input type="date" class="form-control" id="newAvailDate"></div>
+                            <div class="form-group"><label>Hours</label><div class="form-row"><input type="time" class="form-control" id="newAvailStart" value="09:00"><input type="time" class="form-control" id="newAvailEnd" value="17:00"></div></div>
+                            <div class="form-group"><label>Slot Duration</label><select class="form-control" id="slotDuration"><option value="30">30 min</option><option value="60" selected>60 min</option><option value="90">90 min</option></select></div>
+                            <button class="btn btn-primary" onclick="addAvailability()">Add Day</button>
+                            <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1)">
+                                <label style="font-size:.9rem;margin-bottom:12px;display:block">Quick Add (Next 7 Days)</label>
+                                <div class="quick-add">
+                                    <button class="quick-add-btn" onclick="quickAddWeek('weekdays')">Weekdays</button>
+                                    <button class="quick-add-btn" onclick="quickAddWeek('all')">All 7 Days</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="grid-column:span 2">
+                            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Current Availability</h3>
+                            <div class="availability-list" id="availabilityList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section" id="servicesSection">
+                    <div class="content-header"><h2 class="content-title">Services & Pricing</h2><button class="btn btn-primary btn-sm" onclick="openAddServiceModal()">+ Add Service</button></div>
+                    <div class="cards-grid"><div class="card" style="grid-column:span 2"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Your Services</h3><div id="servicesList"></div></div></div>
+                </div>
+
+                <div class="admin-section" id="dealsSection">
+                    <div class="content-header"><h2 class="content-title">Deals & Promotions</h2></div>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create Deal</h3>
+                            <div class="form-group"><label>Deal Name</label><input type="text" class="form-control" id="dealName" placeholder="Summer Special"></div>
+                            <div class="form-group"><label>Apply to</label><select class="form-control" id="dealService"></select></div>
+                            <div class="form-group"><label>Type</label><select class="form-control" id="dealType"><option value="percent">% Off</option><option value="fixed">$ Off</option><option value="price">Set Price</option></select></div>
+                            <div class="form-group"><label>Value</label><input type="number" class="form-control" id="dealValue" placeholder="20"></div>
+                            <div class="form-group"><label>Expires (optional)</label><input type="date" class="form-control" id="dealExpiry"></div>
+                            <button class="btn btn-primary" onclick="addDeal()">Create Deal</button>
+                        </div>
+                        <div class="card"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Active Deals</h3><div id="dealsList"></div></div>
+                    </div>
+                </div>
+
+                <div class="admin-section" id="clientsSection">
+                    <div class="content-header"><h2 class="content-title">Clients</h2></div>
+                    <div class="table-container">
+                        <table class="data-table"><thead><tr><th>Client</th><th>Phone</th><th>Registered</th><th>Bookings</th><th>Actions</th></tr></thead><tbody id="clientsTable"></tbody></table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editServiceModal">
+        <div class="modal">
+            <h2>Edit Service</h2>
+            <input type="hidden" id="editServiceId">
+            <div class="form-group"><label>Name</label><input type="text" class="form-control" id="editServiceName"></div>
+            <div class="form-group"><label>Duration (min)</label><input type="number" class="form-control" id="editServiceDuration"></div>
+            <div class="form-group"><label>Price ($)</label><input type="number" class="form-control" id="editServicePrice"></div>
+            <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('editServiceModal')">Cancel</button><button class="btn btn-primary" onclick="saveService()">Save</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addServiceModal">
+        <div class="modal">
+            <h2>Add Service</h2>
+            <div class="form-group"><label>Name</label><input type="text" class="form-control" id="newServiceName" placeholder="Gel Manicure"></div>
+            <div class="form-group"><label>Duration (min)</label><input type="number" class="form-control" id="newServiceDuration" placeholder="60"></div>
+            <div class="form-group"><label>Price ($)</label><input type="number" class="form-control" id="newServicePrice" placeholder="50"></div>
+            <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('addServiceModal')">Cancel</button><button class="btn btn-primary" onclick="addService()">Add</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editAvailModal">
+        <div class="modal">
+            <h2>Edit Slots</h2>
+            <input type="hidden" id="editAvailDate">
+            <div class="form-group"><label>Date: <strong id="editAvailDateDisplay"></strong></label></div>
+            <div class="form-group"><label>Add Slot</label><div class="form-row"><input type="time" class="form-control" id="addSlotTime"><button class="btn btn-primary" onclick="addSlotToDay()">Add</button></div></div>
+            <div class="form-group"><label>Current Slots</label><div id="editAvailSlots" class="availability-slots-grid"></div></div>
+            <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('editAvailModal')">Close</button></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span id="toastMessage">Success!</span></div>
+
+    <script>
+        const ADMIN_PASSWORD='admin123';
+        const DEFAULT_SERVICES=[{id:'manicure',name:'Classic Manicure',duration:45,price:45},{id:'pedicure',name:'Luxury Pedicure',duration:60,price:55},{id:'gelset',name:'Gel Full Set',duration:90,price:75},{id:'haircut',name:'Haircut & Style',duration:60,price:65}];
+
+        function loadData(){const s=localStorage.getItem('luxebook_data');if(s){const d=JSON.parse(s);if(!d.services)d.services=DEFAULT_SERVICES;if(!d.deals)d.deals=[];return d}return{users:[],availability:[],appointments:[],services:DEFAULT_SERVICES,deals:[]}}
+        function saveData(){localStorage.setItem('luxebook_data',JSON.stringify(data))}
+        let data=loadData(),currentFilter='pending';
+
+        function attemptLogin(){const p=document.getElementById('adminPassword').value;if(p===ADMIN_PASSWORD){localStorage.setItem('luxebook_admin_auth','true');document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard()}else{document.getElementById('loginError').classList.add('show');document.getElementById('adminPassword').value=''}}
+        function adminLogout(){localStorage.removeItem('luxebook_admin_auth');location.reload()}
+        function checkAuth(){if(localStorage.getItem('luxebook_admin_auth')==='true'){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard()}}
+
+        function initDashboard(){updateStats();renderAppointments();renderAvailability();renderServices();renderDeals();renderClients();populateDealServiceDropdown()}
+
+        function updateStats(){const today=new Date().toISOString().split('T')[0],week=new Date(Date.now()+7*24*60*60*1000).toISOString().split('T')[0];document.getElementById('pendingCount').textContent=data.appointments.filter(a=>a.status==='pending').length;document.getElementById('confirmedWeek').textContent=data.appointments.filter(a=>a.date>=today&&a.date<=week&&a.status==='confirmed').length;document.getElementById('activeDeals').textContent=data.deals.filter(d=>!d.expiry||d.expiry>=today).length;document.getElementById('clientCount').textContent=data.users.length}
+
+        function showSection(s){document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));document.querySelector(`.sidebar-link[data-section="${s}"]`).classList.add('active');document.querySelectorAll('.admin-section').forEach(x=>x.classList.remove('active'));document.getElementById(s+'Section').classList.add('active')}
+
+        function filterAppointments(f){currentFilter=f;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector(`.tab[data-filter="${f}"]`).classList.add('active');renderAppointments()}
+
+        function renderAppointments(){const tbody=document.getElementById('appointmentsTable');let filtered=currentFilter==='all'?data.appointments:data.appointments.filter(a=>a.status===currentFilter);filtered.sort((a,b)=>new Date(a.date+'T'+a.time)-new Date(b.date+'T'+b.time));if(!filtered.length){tbody.innerHTML='<tr><td colspan="5"><div class="empty-state"><p>No appointments</p></div></td></tr>';return}tbody.innerHTML=filtered.map(apt=>{const d=new Date(apt.date+'T12:00:00'),fd=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}),ini=apt.userName.split(' ').map(n=>n[0]).join('').toUpperCase();return`<tr><td><div class="client-info"><div class="client-avatar">${ini}</div><div><div class="client-name">${apt.userName}</div><div class="client-email">${apt.userEmail}</div></div></div></td><td>${apt.service}<br><small style="color:var(--rose)">$${apt.price}</small></td><td>${fd}<br><small style="color:var(--rose)">${formatTime(apt.time)}</small></td><td><span class="status-badge ${apt.status}">${apt.status}</span></td><td><div class="action-btns">${apt.status==='pending'?`<button class="action-btn confirm" onclick="confirmAppointment('${apt.id}')">Confirm</button><button class="action-btn cancel" onclick="cancelAppointment('${apt.id}')">Decline</button>`:apt.status==='confirmed'?`<button class="action-btn cancel" onclick="cancelAppointment('${apt.id}')">Cancel</button>`:'—'}</div></td></tr>`}).join('')}
+
+        function confirmAppointment(id){const a=data.appointments.find(x=>x.id===id);if(a){a.status='confirmed';saveData();renderAppointments();updateStats();showToast('Confirmed!')}}
+        function cancelAppointment(id){if(!confirm('Cancel this appointment?'))return;const a=data.appointments.find(x=>x.id===id);if(a){a.status='cancelled';saveData();renderAppointments();updateStats();showToast('Cancelled')}}
+
+        function generateSlots(start,end,dur){const slots=[];let c=timeToMinutes(start);const e=timeToMinutes(end);while(c+dur<=e){slots.push(minutesToTime(c));c+=dur}return slots}
+
+        function addAvailability(){const date=document.getElementById('newAvailDate').value,start=document.getElementById('newAvailStart').value,end=document.getElementById('newAvailEnd').value,dur=parseInt(document.getElementById('slotDuration').value);if(!date||!start||!end){showToast('Fill all fields','error');return}const slots=generateSlots(start,end,dur);if(!slots.length){showToast('Invalid time range','error');return}const ex=data.availability.find(a=>a.date===date);if(ex){slots.forEach(s=>{if(!ex.slots.includes(s))ex.slots.push(s)});ex.slots.sort()}else data.availability.push({date,slots});data.availability.sort((a,b)=>new Date(a.date)-new Date(b.date));saveData();renderAvailability();showToast(`Added ${slots.length} slots`);document.getElementById('newAvailDate').value=''}
+
+        function quickAddWeek(type){const start=document.getElementById('newAvailStart').value,end=document.getElementById('newAvailEnd').value,dur=parseInt(document.getElementById('slotDuration').value);let added=0;for(let i=1;i<=7;i++){const d=new Date(Date.now()+i*24*60*60*1000),dow=d.getDay();if(type==='weekdays'&&(dow===0||dow===6))continue;const ds=d.toISOString().split('T')[0],slots=generateSlots(start,end,dur);const ex=data.availability.find(a=>a.date===ds);if(ex){slots.forEach(s=>{if(!ex.slots.includes(s))ex.slots.push(s)});ex.slots.sort()}else data.availability.push({date:ds,slots});added++}data.availability.sort((a,b)=>new Date(a.date)-new Date(b.date));saveData();renderAvailability();showToast(`Added ${added} days`)}
+
+        function removeAvailability(date){if(!confirm('Remove this day?'))return;data.availability=data.availability.filter(a=>a.date!==date);saveData();renderAvailability();showToast('Removed')}
+
+        function openEditAvailModal(date){const av=data.availability.find(a=>a.date===date);if(!av)return;document.getElementById('editAvailDate').value=date;document.getElementById('editAvailDateDisplay').textContent=formatDateLong(date);renderEditAvailSlots(date);document.getElementById('editAvailModal').classList.add('active')}
+
+        function renderEditAvailSlots(date){const av=data.availability.find(a=>a.date===date),c=document.getElementById('editAvailSlots');if(!av||!av.slots.length){c.innerHTML='<p style="color:var(--rose)">No slots</p>';return}const booked=data.appointments.filter(a=>a.date===date&&a.status!=='cancelled').map(a=>a.time);c.innerHTML=av.slots.map(s=>{const b=booked.includes(s);return`<div class="slot-chip ${b?'booked':''}">${formatTime(s)}${b?' (booked)':`<span class="remove-slot" onclick="removeSlot('${date}','${s}')">×</span>`}</div>`}).join('')}
+
+        function addSlotToDay(){const date=document.getElementById('editAvailDate').value,time=document.getElementById('addSlotTime').value;if(!time){showToast('Select time','error');return}const av=data.availability.find(a=>a.date===date);if(av){if(!av.slots.includes(time)){av.slots.push(time);av.slots.sort();saveData();renderEditAvailSlots(date);renderAvailability();showToast('Slot added')}else showToast('Exists','error')}document.getElementById('addSlotTime').value=''}
+
+        function removeSlot(date,slot){const av=data.availability.find(a=>a.date===date);if(av){av.slots=av.slots.filter(s=>s!==slot);if(!av.slots.length)data.availability=data.availability.filter(a=>a.date!==date);saveData();renderEditAvailSlots(date);renderAvailability();showToast('Removed')}}
+
+        function renderAvailability(){const list=document.getElementById('availabilityList'),today=new Date().toISOString().split('T')[0],future=data.availability.filter(a=>a.date>=today);if(!future.length){list.innerHTML='<div class="empty-state"><p>No availability set</p></div>';return}list.innerHTML=future.map(a=>{const booked=data.appointments.filter(x=>x.date===a.date&&x.status!=='cancelled'),avail=a.slots.length-booked.length;return`<div class="availability-item"><div class="availability-header"><div><div class="availability-date">${formatDateLong(a.date)}</div><small style="color:var(--rose)">${a.slots.length} slots (${avail} open)</small></div><div class="action-btns"><button class="action-btn edit" onclick="openEditAvailModal('${a.date}')">Edit</button><button class="delete-btn" onclick="removeAvailability('${a.date}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></div><div class="availability-slots-grid">${a.slots.slice(0,8).map(s=>{const b=booked.find(x=>x.time===s);return`<div class="slot-chip ${b?'booked':''}">${formatTime(s)}</div>`}).join('')}${a.slots.length>8?`<div class="slot-chip">+${a.slots.length-8} more</div>`:''}</div></div>`}).join('')}
+
+        function renderServices(){const c=document.getElementById('servicesList');if(!data.services.length){c.innerHTML='<div class="empty-state"><p>No services</p></div>';return}const today=new Date().toISOString().split('T')[0];c.innerHTML=data.services.map(s=>{const deal=data.deals.find(d=>d.serviceId===s.id&&(!d.expiry||d.expiry>=today)),fp=deal?calculateDealPrice(s.price,deal):s.price;return`<div class="service-item ${deal?'has-deal':''}"><div class="service-details"><h4>${s.name}</h4><span>${s.duration} min</span>${deal?`<div class="deal-badge">${deal.name}</div>`:''}</div><div style="display:flex;align-items:center;gap:16px"><div style="text-align:right">${deal?`<div class="service-original-price">$${s.price}</div>`:''}<div class="service-price">$${fp}</div></div><div class="action-btns"><button class="action-btn edit" onclick="openEditServiceModal('${s.id}')">Edit</button><button class="action-btn cancel" onclick="deleteService('${s.id}')">Delete</button></div></div></div>`}).join('')}
+
+        function openAddServiceModal(){document.getElementById('newServiceName').value='';document.getElementById('newServiceDuration').value='';document.getElementById('newServicePrice').value='';document.getElementById('addServiceModal').classList.add('active')}
+
+        function addService(){const name=document.getElementById('newServiceName').value.trim(),dur=parseInt(document.getElementById('newServiceDuration').value),price=parseInt(document.getElementById('newServicePrice').value);if(!name||!dur||!price){showToast('Fill all fields','error');return}const id=name.toLowerCase().replace(/\s+/g,'-')+'-'+Date.now();data.services.push({id,name,duration:dur,price});saveData();closeModal('addServiceModal');renderServices();populateDealServiceDropdown();showToast('Service added!')}
+
+        function openEditServiceModal(id){const s=data.services.find(x=>x.id===id);if(!s)return;document.getElementById('editServiceId').value=id;document.getElementById('editServiceName').value=s.name;document.getElementById('editServiceDuration').value=s.duration;document.getElementById('editServicePrice').value=s.price;document.getElementById('editServiceModal').classList.add('active')}
+
+        function saveService(){const id=document.getElementById('editServiceId').value,s=data.services.find(x=>x.id===id);if(s){s.name=document.getElementById('editServiceName').value.trim();s.duration=parseInt(document.getElementById('editServiceDuration').value);s.price=parseInt(document.getElementById('editServicePrice').value);saveData();closeModal('editServiceModal');renderServices();populateDealServiceDropdown();showToast('Saved!')}}
+
+        function deleteService(id){if(!confirm('Delete this service?'))return;data.services=data.services.filter(s=>s.id!==id);data.deals=data.deals.filter(d=>d.serviceId!==id);saveData();renderServices();renderDeals();populateDealServiceDropdown();showToast('Deleted')}
+
+        function populateDealServiceDropdown(){document.getElementById('dealService').innerHTML=data.services.map(s=>`<option value="${s.id}">${s.name} ($${s.price})</option>`).join('')}
+
+        function calculateDealPrice(orig,deal){switch(deal.type){case'percent':return Math.round(orig*(1-deal.value/100));case'fixed':return Math.max(0,orig-deal.value);case'price':return deal.value;default:return orig}}
+
+        function addDeal(){const name=document.getElementById('dealName').value.trim(),sid=document.getElementById('dealService').value,type=document.getElementById('dealType').value,val=parseInt(document.getElementById('dealValue').value),exp=document.getElementById('dealExpiry').value||null;if(!name||!sid||!val){showToast('Fill required fields','error');return}data.deals=data.deals.filter(d=>d.serviceId!==sid);data.deals.push({id:Date.now().toString(),name,serviceId:sid,type,value:val,expiry:exp});saveData();renderDeals();renderServices();updateStats();document.getElementById('dealName').value='';document.getElementById('dealValue').value='';document.getElementById('dealExpiry').value='';showToast('Deal created!')}
+
+        function removeDeal(id){data.deals=data.deals.filter(d=>d.id!==id);saveData();renderDeals();renderServices();updateStats();showToast('Deal removed')}
+
+        function renderDeals(){const c=document.getElementById('dealsList'),today=new Date().toISOString().split('T')[0],active=data.deals.filter(d=>!d.expiry||d.expiry>=today);if(!active.length){c.innerHTML='<div class="empty-state"><p>No active deals</p></div>';return}c.innerHTML=active.map(d=>{const s=data.services.find(x=>x.id===d.serviceId);if(!s)return'';let txt='';switch(d.type){case'percent':txt=d.value+'% off';break;case'fixed':txt='$'+d.value+' off';break;case'price':txt='Now $'+d.value;break}return`<div class="service-item has-deal"><div class="service-details"><h4>${d.name}</h4><span>${s.name}</span><div style="margin-top:4px;font-size:.85rem;color:var(--gold)">${txt}</div>${d.expiry?`<div style="font-size:.8rem;color:var(--rose)">Expires: ${formatDateLong(d.expiry)}</div>`:''}</div><button class="action-btn cancel" onclick="removeDeal('${d.id}')">Remove</button></div>`}).join('')}
+
+        function renderClients(){const tbody=document.getElementById('clientsTable');if(!data.users.length){tbody.innerHTML='<tr><td colspan="4"><div class="empty-state"><p>No clients yet</p></div></td></tr>';return}tbody.innerHTML=data.users.map(u=>{const ini=u.name.split(' ').map(n=>n[0]).join('').toUpperCase(),bk=data.appointments.filter(a=>a.userId===u.id).length,rd=new Date(u.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});return`<tr><td><div class="client-info"><div class="client-avatar">${ini}</div><div><div class="client-name">${u.name}</div><div class="client-email">${u.email}</div></div></div></td><td>${u.phone}</td><td>${rd}</td><td>${bk}</td><td><button class="action-btn cancel" onclick="deleteClient('${u.id}')">Delete</button></td></tr>`}).join('')}
+
+        function formatTime(t){const[h,m]=t.split(':'),hr=parseInt(h),ap=hr>=12?'PM':'AM',h12=hr%12||12;return h12+':'+m+' '+ap}
+        function formatDateLong(ds){return new Date(ds+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})}
+        function timeToMinutes(t){const[h,m]=t.split(':').map(Number);return h*60+m}
+        function minutesToTime(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
+        function showToast(msg,type='success'){const t=document.getElementById('toast'),tm=document.getElementById('toastMessage');tm.textContent=msg;t.classList.remove('error');if(type==='error')t.classList.add('error');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        function closeModal(id){document.getElementById(id).classList.remove('active')}
+        document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('active')})});
+        function deleteClient(id){if(!confirm("Delete this client? This will also remove their appointments."))return;data.users=data.users.filter(u=>u.id!==id);data.appointments=data.appointments.filter(a=>a.userId!==id);saveData();renderClients();updateStats();showToast("Client deleted")}
+        document.addEventListener('DOMContentLoaded',checkAuth);
+    </script>
+</body>
+</html>
