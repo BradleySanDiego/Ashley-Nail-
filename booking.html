@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment 💅 | Ashley's Nails</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-primary: #FF69B4;
+            --pink-light: #FFB6D9;
+            --pink-lighter: #FFE5F1;
+            --pink-dark: #FF1493;
+            --white: #FFFFFF;
+            --text-dark: #4A4A4A;
+            --success: #50C878;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, var(--pink-lighter) 0%, var(--pink-light) 50%, var(--pink-primary) 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3);
+            border-bottom: 4px solid var(--pink-primary);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 2rem;
+            color: var(--pink-primary);
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+            text-decoration: none;
+        }
+
+        .back-button {
+            background: var(--pink-primary);
+            color: var(--white);
+            padding: 0.7rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--pink-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .booking-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 2rem;
+        }
+
+        .booking-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .booking-header h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            color: var(--white);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .booking-header p {
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+
+        /* Booking Form */
+        .booking-form {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
+            border: 4px solid var(--pink-light);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--pink-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 3px solid var(--pink-light);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: 'Fredoka', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--pink-primary);
+        }
+
+        .submit-button {
+            width: 100%;
+            background: var(--pink-primary);
+            color: var(--white);
+            padding: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .submit-button:hover {
+            background: var(--pink-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        .submit-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Available Slots */
+        .slots-section {
+            margin-top: 2rem;
+        }
+
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .slot-button {
+            padding: 1rem;
+            background: var(--pink-lighter);
+            border: 3px solid var(--pink-light);
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            color: var(--text-dark);
+        }
+
+        .slot-button:hover {
+            background: var(--pink-light);
+            transform: translateY(-2px);
+        }
+
+        .slot-button.selected {
+            background: var(--pink-primary);
+            color: var(--white);
+            border-color: var(--pink-dark);
+        }
+
+        .slot-button.booked {
+            background: #f0f0f0;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        .slot-button.booked:hover {
+            transform: none;
+        }
+
+        /* Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .no-slots {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-top: 4px solid var(--pink-primary);
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .booking-header h1 {
+                font-size: 2rem;
+            }
+
+            .booking-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .slots-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Ashley's Nails 💅</a>
+            <a href="index.html" class="back-button">← Back to Home</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="booking-container">
+        <div class="booking-header">
+            <h1>Book Your Appointment ✨</h1>
+            <p>Choose your date and pick an available time slot!</p>
+        </div>
+
+        <div id="message-container"></div>
+
+        <div class="booking-form">
+            <div class="form-group">
+                <label for="customer-name">Your Name 💖</label>
+                <input type="text" id="customer-name" placeholder="Enter your cute name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="customer-email">Email Address 📧</label>
+                <input type="email" id="customer-email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="customer-phone">Phone Number 📱</label>
+                <input type="tel" id="customer-phone" placeholder="(555) 123-4567" required>
+            </div>
+
+            <div class="form-group">
+                <label for="booking-date">Select Date 📅</label>
+                <input type="date" id="booking-date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="service-type">Service Type 💅</label>
+                <select id="service-type" required>
+                    <option value="">Choose a service...</option>
+                    <option value="Classic Manicure - $35">💅 Classic Manicure - $35</option>
+                    <option value="Gel Manicure - $50">✨ Gel Manicure - $50</option>
+                    <option value="Pedicure Deluxe - $45">🌸 Pedicure Deluxe - $45</option>
+                    <option value="Nail Art Magic - $15+">🎨 Nail Art Magic - $15+</option>
+                    <option value="Bling It Up! - $10+">💎 Bling It Up! - $10+</option>
+                    <option value="Full Set Acrylics - $65">🌈 Full Set Acrylics - $65</option>
+                </select>
+            </div>
+
+            <div class="slots-section">
+                <div class="form-group">
+                    <label>Available Time Slots ⏰</label>
+                    <div id="slots-container">
+                        <div class="no-slots">Please select a date to see available times</div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="submit-button" id="book-button" disabled>
+                Book Appointment 🎀
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made with 💖 by Ashley | © 2026 Ashley's Nails</p>
+    </footer>
+
+    <script>
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('booking-date').min = today;
+
+        let selectedSlot = null;
+        let selectedDate = null;
+
+        // Load available slots and bookings from localStorage
+        function loadData() {
+            const availableSlots = JSON.parse(localStorage.getItem('availableSlots')) || {};
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            return { availableSlots, bookings };
+        }
+
+        // Display available slots for selected date
+        function displaySlots(date) {
+            const slotsContainer = document.getElementById('slots-container');
+            const { availableSlots, bookings } = loadData();
+            
+            const dateSlots = availableSlots[date] || [];
+            
+            if (dateSlots.length === 0) {
+                slotsContainer.innerHTML = '<div class="no-slots">No available time slots for this date. Please choose another date or contact us! 📞</div>';
+                return;
+            }
+
+            // Get booked slots for this date
+            const bookedSlots = bookings
+                .filter(booking => booking.date === date)
+                .map(booking => booking.time);
+
+            slotsContainer.innerHTML = '<div class="slots-grid"></div>';
+            const grid = slotsContainer.querySelector('.slots-grid');
+
+            dateSlots.forEach(slot => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'slot-button';
+                button.textContent = slot;
+                
+                if (bookedSlots.includes(slot)) {
+                    button.classList.add('booked');
+                    button.disabled = true;
+                } else {
+                    button.addEventListener('click', () => selectSlot(slot, button));
+                }
+                
+                grid.appendChild(button);
+            });
+        }
+
+        // Select a time slot
+        function selectSlot(slot, button) {
+            // Remove previous selection
+            document.querySelectorAll('.slot-button.selected').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selection to clicked button
+            button.classList.add('selected');
+            selectedSlot = slot;
+            
+            // Enable book button
+            checkFormValidity();
+        }
+
+        // Check if form is valid
+        function checkFormValidity() {
+            const name = document.getElementById('customer-name').value;
+            const email = document.getElementById('customer-email').value;
+            const phone = document.getElementById('customer-phone').value;
+            const date = document.getElementById('booking-date').value;
+            const service = document.getElementById('service-type').value;
+            
+            const bookButton = document.getElementById('book-button');
+            bookButton.disabled = !(name && email && phone && date && service && selectedSlot);
+        }
+
+        // Handle date change
+        document.getElementById('booking-date').addEventListener('change', function() {
+            selectedDate = this.value;
+            selectedSlot = null;
+            displaySlots(selectedDate);
+            checkFormValidity();
+        });
+
+        // Handle form input changes
+        ['customer-name', 'customer-email', 'customer-phone', 'service-type'].forEach(id => {
+            document.getElementById(id).addEventListener('input', checkFormValidity);
+        });
+
+        // Handle booking submission
+        document.getElementById('book-button').addEventListener('click', function() {
+            const name = document.getElementById('customer-name').value;
+            const email = document.getElementById('customer-email').value;
+            const phone = document.getElementById('customer-phone').value;
+            const date = document.getElementById('booking-date').value;
+            const service = document.getElementById('service-type').value;
+
+            if (!selectedSlot) {
+                showMessage('Please select a time slot!', 'error');
+                return;
+            }
+
+            // Create booking object
+            const booking = {
+                id: Date.now(),
+                name,
+                email,
+                phone,
+                date,
+                time: selectedSlot,
+                service,
+                createdAt: new Date().toISOString()
+            };
+
+            // Save booking
+            const { bookings } = loadData();
+            bookings.push(booking);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            // Show success message
+            showMessage('🎉 Yay! Your appointment is booked! We can\'t wait to see you! Check your email for confirmation. 💖', 'success');
+
+            // Reset form
+            setTimeout(() => {
+                document.getElementById('customer-name').value = '';
+                document.getElementById('customer-email').value = '';
+                document.getElementById('customer-phone').value = '';
+                document.getElementById('booking-date').value = '';
+                document.getElementById('service-type').value = '';
+                selectedSlot = null;
+                selectedDate = null;
+                document.getElementById('slots-container').innerHTML = '<div class="no-slots">Please select a date to see available times</div>';
+                document.getElementById('book-button').disabled = true;
+            }, 3000);
+        });
+
+        // Show message
+        function showMessage(text, type) {
+            const container = document.getElementById('message-container');
+            container.innerHTML = `<div class="message ${type}">${text}</div>`;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
