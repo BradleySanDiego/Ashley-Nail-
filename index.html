@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ashley's Nails 💅 | Hello Kitty Nail Salon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-primary: #FF69B4;
+            --pink-light: #FFB6D9;
+            --pink-lighter: #FFE5F1;
+            --pink-dark: #FF1493;
+            --white: #FFFFFF;
+            --cream: #FFF5F7;
+            --bow-red: #FF3366;
+            --text-dark: #4A4A4A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, var(--pink-lighter) 0%, var(--pink-light) 50%, var(--pink-primary) 100%);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Floating Hello Kitty Bows Animation */
+        .floating-bows {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .bow {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 15s infinite ease-in-out;
+            opacity: 0.3;
+        }
+
+        .bow:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .bow:nth-child(2) { left: 25%; animation-delay: 3s; }
+        .bow:nth-child(3) { left: 45%; animation-delay: 6s; }
+        .bow:nth-child(4) { left: 65%; animation-delay: 9s; }
+        .bow:nth-child(5) { left: 85%; animation-delay: 12s; }
+
+        @keyframes float {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            50% { transform: translateY(50vh) rotate(180deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3);
+            border-bottom: 4px solid var(--pink-primary);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 2rem;
+            color: var(--pink-primary);
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--pink-primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '🎀';
+            position: absolute;
+            right: -15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,182,217,0.5) 100%);
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 4rem;
+            color: var(--pink-primary);
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 6px rgba(255, 105, 180, 0.4);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: var(--pink-primary);
+            color: var(--white);
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: var(--pink-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        /* Services Section */
+        .services {
+            position: relative;
+            z-index: 5;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            text-align: center;
+            color: var(--white);
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 30px;
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
+            transition: all 0.3s ease;
+            border: 4px solid var(--pink-light);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 12px 40px rgba(255, 105, 180, 0.5);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .service-card h3 {
+            font-size: 1.8rem;
+            color: var(--pink-primary);
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .service-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pink-dark);
+        }
+
+        /* Gallery Section */
+        .gallery {
+            position: relative;
+            z-index: 5;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            height: 250px;
+            background: linear-gradient(135deg, var(--pink-lighter), var(--pink-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            transition: all 0.3s ease;
+            border: 3px solid var(--pink-primary);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.5);
+        }
+
+        /* About Section */
+        .about {
+            position: relative;
+            z-index: 5;
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
+            border: 4px solid var(--pink-light);
+        }
+
+        .about-content h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: var(--pink-primary);
+            margin-bottom: 2rem;
+        }
+
+        .about-content p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            position: relative;
+            z-index: 5;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.3);
+            border: 4px solid var(--pink-light);
+        }
+
+        .contact-content h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: var(--pink-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .contact-info {
+            font-size: 1.2rem;
+            line-height: 2;
+        }
+
+        .contact-info p {
+            margin-bottom: 1rem;
+        }
+
+        .contact-info strong {
+            color: var(--pink-primary);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 5;
+            background: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-top: 4px solid var(--pink-primary);
+        }
+
+        footer p {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Bows Background -->
+    <div class="floating-bows">
+        <div class="bow">🎀</div>
+        <div class="bow">🎀</div>
+        <div class="bow">🎀</div>
+        <div class="bow">🎀</div>
+        <div class="bow">🎀</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">Ashley's Nails 💅</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>✨ Welcome to Ashley's Nails! ✨</h1>
+        <p>Your Kawaii Hello Kitty Nail Paradise 🌸</p>
+        <a href="#contact" class="cta-button">Book Your Appointment 💖</a>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <h2 class="section-title">Our Adorable Services 🎀</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>💅 Classic Manicure</h3>
+                <p>Pamper your nails with our signature Hello Kitty themed manicure! Includes nail shaping, cuticle care, hand massage, and your choice of polish.</p>
+                <div class="service-price">$35</div>
+            </div>
+            <div class="service-card">
+                <h3>✨ Gel Manicure</h3>
+                <p>Long-lasting gel polish that stays cute for weeks! Perfect for busy kitties who want their nails to look fabulous 24/7.</p>
+                <div class="service-price">$50</div>
+            </div>
+            <div class="service-card">
+                <h3>🌸 Pedicure Deluxe</h3>
+                <p>Treat your tootsies to a luxurious spa experience! Includes foot soak, exfoliation, massage, and polish with sparkles!</p>
+                <div class="service-price">$45</div>
+            </div>
+            <div class="service-card">
+                <h3>🎨 Nail Art Magic</h3>
+                <p>Custom Hello Kitty designs, kawaii characters, or any adorable art your heart desires! Let your imagination run wild!</p>
+                <div class="service-price">$15+</div>
+            </div>
+            <div class="service-card">
+                <h3>💎 Bling It Up!</h3>
+                <p>Add rhinestones, glitter, bows, and all the sparkly things to make your nails absolutely dazzling!</p>
+                <div class="service-price">$10+</div>
+            </div>
+            <div class="service-card">
+                <h3>🌈 Full Set Acrylics</h3>
+                <p>Build your dream nails from scratch! Custom length, shape, and endless cute possibilities!</p>
+                <div class="service-price">$65</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <h2 class="section-title">Nail Inspiration Gallery 🌟</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">💖</div>
+            <div class="gallery-item">🎀</div>
+            <div class="gallery-item">🌸</div>
+            <div class="gallery-item">✨</div>
+            <div class="gallery-item">🦄</div>
+            <div class="gallery-item">🍓</div>
+            <div class="gallery-item">🌈</div>
+            <div class="gallery-item">💅</div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="about-content">
+            <h2>About Ashley's Nails 🎀</h2>
+            <p>Hi cuties! I'm Ashley, and I'm absolutely obsessed with all things Hello Kitty, kawaii, and making nails look fabulous! 💕</p>
+            <p>I started Ashley's Nails because I believe everyone deserves to feel cute and confident with beautiful nails. Whether you want classic elegance or full-on kawaii explosion, I'm here to make your nail dreams come true!</p>
+            <p>Every service is done with love, care, and a whole lot of pink! Come visit my cozy studio where we can chat, laugh, and create the most adorable nails you've ever seen! ✨</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="contact-content">
+            <h2>Let's Get Cute! 💌</h2>
+            <div class="contact-info">
+                <p><strong>📍 Location:</strong> 123 Kawaii Lane, Cute Town, CT 12345</p>
+                <p><strong>📞 Phone:</strong> (555) 123-4567</p>
+                <p><strong>📧 Email:</strong> hello@ashleysnails.com</p>
+                <p><strong>🕐 Hours:</strong></p>
+                <p>Monday - Friday: 9AM - 7PM</p>
+                <p>Saturday: 10AM - 6PM</p>
+                <p>Sunday: Closed (Need my beauty sleep! 😴)</p>
+                <p style="margin-top: 2rem; text-align: center;">
+                    <a href="tel:5551234567" class="cta-button">Call Now! 📞</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made with 💖 by Ashley | © 2026 Ashley's Nails - All Rights Reserved</p>
+        <p>Stay cute! 🎀✨</p>
+    </footer>
+</body>
+</html>
